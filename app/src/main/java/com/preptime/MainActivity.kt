@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.preptime.data.Settings
 import com.preptime.data.store
 import com.preptime.ui.HomeScreen
+import com.preptime.ui.TimerScreen
 import com.preptime.ui.theme.PrepTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
                         "edit?id={id}",
                         arguments = listOf(navArgument("id") { type = NavType.StringType; nullable = true }),
                     ) { EditScreen(it.arguments?.getString("id")) { nav.popBackStack() } }
+                    composable("timer/{id}") { TimerScreen(onBack = { nav.popBackStack() }) }
                 }
             }
         }
