@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 enum class ThemeMode { LIGHT, DARK, SYSTEM }
 
 @Serializable
-data class Settings(val swatch: Int = 0, val mode: ThemeMode = ThemeMode.SYSTEM)
+data class Settings(val swatch: Int = 0, val mode: ThemeMode = ThemeMode.LIGHT)
 
 private val Context.dataStore by preferencesDataStore("prep")
 private val TEMPLATES = stringPreferencesKey("templates")

@@ -32,7 +32,7 @@ import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -129,7 +129,7 @@ fun TimerScreen(onBack: () -> Unit, vm: TimerViewModel = viewModel()) {
                     onClick = c::endTurn,
                     enabled = c.isLive,
                     modifier = Modifier.align(Alignment.TopEnd).size(48.dp),
-                ) { Icon(Icons.Rounded.SkipNext, "End speaker's turn") }
+                ) { Icon(Icons.Rounded.Close, "End speaker's turn") }
             }
 
             clocks.forEachIndexed { i, k ->

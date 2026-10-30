@@ -84,8 +84,15 @@ fun HomeScreen(onOpen: (id: String) -> Unit, onEdit: (id: String?) -> Unit) {
         },
     ) { pad ->
         if (templates.isEmpty()) {
-            Box(Modifier.fillMaxSize().padding(pad), contentAlignment = Alignment.Center) {
-                Text("No templates yet. Tap New to make one.", style = MaterialTheme.typography.bodyLarge)
+            Box(Modifier.fillMaxSize().padding(pad).padding(32.dp), contentAlignment = Alignment.Center) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("No debates yet", style = MaterialTheme.typography.titleLarge)
+                    listOf(
+                        "1.  Tap New to create a debate",
+                        "2.  Set speakers, time and bells, then Save",
+                        "3.  Tap the debate, then Start",
+                    ).forEach { Text(it, style = MaterialTheme.typography.bodyLarge) }
+                }
             }
         } else {
             LazyColumn(
