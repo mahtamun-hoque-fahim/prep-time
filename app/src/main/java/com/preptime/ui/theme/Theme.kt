@@ -39,7 +39,7 @@ fun PrepTheme(settings: Settings, content: @Composable () -> Unit) {
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
     val p = Swatches.getOrElse(settings.swatch) { Swatches[0] }
-    val base = if (dark) darkColorScheme() else lightColorScheme()
+    val base = if (dark) darkColorScheme() else lightColorScheme(background = Color.White, surface = Color.White)
     val soft = lerp(p, base.surface, 0.75f)
     val scheme = base.copy(
         primary = p,
