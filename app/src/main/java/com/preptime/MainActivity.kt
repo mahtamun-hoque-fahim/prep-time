@@ -12,6 +12,8 @@ import androidx.navigation.navArgument
 import com.preptime.ui.EditScreen
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.dropUnlessResumed
+import com.preptime.audio.Bell
 import com.preptime.data.Settings
 import com.preptime.data.store
 import com.preptime.ui.HomeScreen
@@ -22,6 +24,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (savedInstanceState == null) Bell.restoreSavedVolume(this)
         setContent {
             val settings by store.settings.collectAsStateWithLifecycle(Settings())
             PrepTheme(settings) {
@@ -36,8 +39,8 @@ class MainActivity : ComponentActivity() {
                     composable(
                         "edit?id={id}",
                         arguments = listOf(navArgument("id") { type = NavType.StringType; nullable = true }),
-                    ) { EditScreen(it.arguments?.getString("id")) { nav.popBackStack() } }
-                    composable("timer/{id}") { TimerScreen(onBack = { nav.popBackStack() }) }
+                    ) { EditScreen(it.arguments?.getString("id"), onDone = dropUnlessResumed { nav.popBackStack() }) }
+                    composable("timer/{id}") { TimerScreen(onBack = dropUnlessResumed { nav.popBackStack() }) }
                 }
             }
         }

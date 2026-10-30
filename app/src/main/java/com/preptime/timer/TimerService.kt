@@ -18,6 +18,9 @@ class TimerService : Service() {
 
     override fun onBind(intent: Intent?) = null
 
+    // After a process kill there is no timer to serve; don't come back as an orphan.
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_NOT_STICKY
+
     override fun onCreate() {
         super.onCreate()
         getSystemService(NotificationManager::class.java)
