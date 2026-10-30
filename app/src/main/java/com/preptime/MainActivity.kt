@@ -6,7 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navArgument
+import com.preptime.ui.EditScreen
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.preptime.data.Settings
@@ -29,6 +32,10 @@ class MainActivity : ComponentActivity() {
                             onEdit = { nav.navigate(if (it == null) "edit" else "edit?id=$it") },
                         )
                     }
+                    composable(
+                        "edit?id={id}",
+                        arguments = listOf(navArgument("id") { type = NavType.StringType; nullable = true }),
+                    ) { EditScreen(it.arguments?.getString("id")) { nav.popBackStack() } }
                 }
             }
         }
