@@ -56,8 +56,8 @@ class TimerService : Service() {
         private var latest: Notification? = null
 
         /** Starts the service if needed and shows [clock] (`now` = elapsedRealtime) in the notification and pill. */
-        fun show(ctx: Context, title: String, clock: SpeakerClock, now: Long) {
-            val n = build(ctx, title, clock to clock.remainingMs(now))
+        fun show(ctx: Context, title: String, clock: SpeakerClock, now: Long, accent: Int) {
+            val n = build(ctx, title, clock to clock.remainingMs(now), accent)
             latest = n
             if (running) {
                 ctx.getSystemService(NotificationManager::class.java).notify(ID, n)
@@ -66,11 +66,14 @@ class TimerService : Service() {
             }
         }
 
+        /** `05:00` / `+00:12` under an hour, so it fits the 96dp chip. */
+        private fun shortClock(ms: Long) = formatClock(ms).replace(Regex("^(\\+?)00:"), "$1")
+
         fun stop(ctx: Context) {
             ctx.stopService(Intent(ctx, TimerService::class.java))
         }
 
-        private fun build(ctx: Context, title: String, state: Pair<SpeakerClock, Long>?): Notification {
+        private fun build(ctx: Context, title: String, state: Pair<SpeakerClock, Long>?, accent: Int = 0): Notification {
             val nm = ctx.getSystemService(NotificationManager::class.java)
             nm.deleteNotificationChannel("timer") // 1.0's low-importance channel, which can't show a pill
             // Default importance so the pill shows; silent because the bell is the only sound.
@@ -92,16 +95,20 @@ class TimerService : Service() {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setCategory(Notification.CATEGORY_STOPWATCH)
+            // Android 12+ otherwise holds a foreground-service notification back for up to 10 s.
+            if (Build.VERSION.SDK_INT >= 31) b.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
             if (state != null) {
                 val (clock, remaining) = state
-                // The system ticks the chronometer itself, so no per-second reposting is needed.
+                // Title is the time alone: the small pill (HyperOS island) shows only the title and ignores the chronometer.
+                val time = shortClock(remaining)
                 val end = System.currentTimeMillis() + remaining
+                b.setContentTitle(time).setShortCriticalText(time)
                 when (clock.phase) {
-                    Phase.RUNNING -> b.setContentText("Speaking").setWhen(end)
+                    Phase.RUNNING -> b.setContentText(title).setWhen(end)
                         .setUsesChronometer(true).setChronometerCountDown(true)
-                    Phase.OVERTIME -> b.setContentText("Time up · overtime").setWhen(end).setUsesChronometer(true)
-                    else -> b.setContentText("Paused · ${formatClock(remaining)}").setShowWhen(false)
-                        .setShortCriticalText("Paused")
+                    // Accent tint while the bell rings; setColorized would disqualify the pill.
+                    Phase.OVERTIME -> b.setContentText("$title · time up").setWhen(end).setUsesChronometer(true).setColor(accent)
+                    else -> b.setContentText("$title · paused").setShowWhen(false)
                 }
             }
             // shortcut: raw EXTRA_REQUEST_PROMOTED_ONGOING key, as setRequestPromotedOngoing isn't in the API 36 SDK; use it once compileSdk >= 37

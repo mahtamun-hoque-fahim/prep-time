@@ -7,6 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.preptime.audio.Bell
 import com.preptime.data.store
+import com.preptime.model.formatClock
+import com.preptime.ui.theme.Swatches
+import androidx.compose.ui.graphics.toArgb
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +29,7 @@ class TimerViewModel(app: Application, saved: SavedStateHandle) : AndroidViewMod
         viewModelScope.launch {
             val id: String = checkNotNull(saved["id"])
             val t = app.store.templates.first().find { it.id == id } ?: return@launch
+            val accent = Swatches.getOrElse(app.store.settings.first().swatch) { Swatches[0] }.toArgb()
             val c = TimerController(t, bell, SystemClock::elapsedRealtime)
             name.value = t.name
             _controller.value = c
@@ -35,10 +39,11 @@ class TimerViewModel(app: Application, saved: SavedStateHandle) : AndroidViewMod
                 now.value = SystemClock.elapsedRealtime()
                 val i = c.activeIndex
                 val k = c.clocks.value.getOrNull(i)
-                val key = if (c.isLive && k != null) Triple(i, k.phase, k.durationMs) else null
+                // Repost once a second (the shown seconds change) so pills that show text, like HyperOS's, tick.
+                val key = if (c.isLive && k != null) Triple(i, k.phase, formatClock(k.remainingMs(now.value))) else null
                 if (key != shown) {
                     shown = key
-                    if (k != null && key != null) TimerService.show(app, "${t.name} · Speaker ${i + 1}", k, now.value)
+                    if (k != null && key != null) TimerService.show(app, "${t.name} · Speaker ${i + 1}", k, now.value, accent)
                     else TimerService.stop(app)
                 }
                 delay(100)
