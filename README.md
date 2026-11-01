@@ -7,7 +7,7 @@
 Set up a round once, then press Start for each speaker. Prep Time rings a bell the whole room can hear.</p>
 
 <p align="center">
-  <a href="https://github.com/mahtamun-hoque-fahim/prep-time/raw/main/release/PrepTime-1.0.apk"><b>⬇ Download Prep Time 1.0 (APK, 2.9 MB)</b></a>
+  <a href="https://github.com/mahtamun-hoque-fahim/prep-time/raw/main/release/PrepTime-1.1.apk"><b>⬇ Download Prep Time 1.1 (APK, 2.9 MB)</b></a>
 </p>
 
 ---
@@ -20,6 +20,7 @@ Keeping time at a debate is busy work. Speakers change quickly, the room needs t
 - **One tap per speaker.** When the next speaker reaches the dias, press **Start**. That's it.
 - **A bell everyone hears.** Warning bells ring once. When time is up, the bell keeps ringing until you stop it, so speakers can't pretend they didn't hear it.
 - **Grant extra time in a tap.** +15s, +30s, +45s, +1m, +2m, or any number of seconds.
+- **The countdown follows you.** Switch to another app and the time keeps ticking in a small pill at the top of the screen, like the Clock app's timer (Android 16).
 - **Works offline, no account, no ads.**
 
 ## Screenshots
@@ -34,11 +35,14 @@ Keeping time at a debate is busy work. Speakers change quickly, the room needs t
 
 ## Install
 
-1. On your Android phone, open the **[download link](https://github.com/mahtamun-hoque-fahim/prep-time/raw/main/release/PrepTime-1.0.apk)**.
-2. Open the downloaded `PrepTime-1.0.apk`.
+1. On your Android phone, open the **[download link](https://github.com/mahtamun-hoque-fahim/prep-time/raw/main/release/PrepTime-1.1.apk)**.
+2. Open the downloaded `PrepTime-1.1.apk`.
 3. If Android asks, allow your browser or file manager to **install unknown apps**, then tap **Install**.
+4. Open Prep Time and tap **Allow** when it asks to send notifications. That's what shows the countdown pill.
 
-Needs Android 9 or newer.
+Needs Android 9 or newer. The countdown pill needs Android 16; older phones show a regular notification with the countdown instead.
+
+**Already have 1.0?** Install 1.1 the same way. It updates in place and keeps your debates.
 
 ## How to use it
 
