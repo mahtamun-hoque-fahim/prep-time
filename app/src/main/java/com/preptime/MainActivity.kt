@@ -1,5 +1,8 @@
 package com.preptime
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,6 +48,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (savedInstanceState == null) Bell.restoreSavedVolume(this)
+        // The running-timer pill is a notification; Android 13+ hides it without this permission.
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+        }
         setContent {
             val settings by store.settings.collectAsStateWithLifecycle(Settings())
             var intro by rememberSaveable { mutableStateOf(true) }

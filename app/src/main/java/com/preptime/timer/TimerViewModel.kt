@@ -29,13 +29,17 @@ class TimerViewModel(app: Application, saved: SavedStateHandle) : AndroidViewMod
             val c = TimerController(t, bell, SystemClock::elapsedRealtime)
             name.value = t.name
             _controller.value = c
-            var live = false
+            var shown: Any? = null // what the notification shows; repost only when it changes
             while (isActive) {
                 c.tick()
                 now.value = SystemClock.elapsedRealtime()
-                if (c.isLive != live) {
-                    live = c.isLive
-                    if (live) TimerService.start(app) else TimerService.stop(app)
+                val i = c.activeIndex
+                val k = c.clocks.value.getOrNull(i)
+                val key = if (c.isLive && k != null) Triple(i, k.phase, k.durationMs) else null
+                if (key != shown) {
+                    shown = key
+                    if (k != null && key != null) TimerService.show(app, "${t.name} · Speaker ${i + 1}", k, now.value)
+                    else TimerService.stop(app)
                 }
                 delay(100)
             }

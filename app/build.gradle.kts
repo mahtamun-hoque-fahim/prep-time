@@ -15,8 +15,8 @@ android {
         applicationId = "com.preptime"
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     // Release signing reads keystore.properties (git-ignored); without it, release builds stay unsigned.
